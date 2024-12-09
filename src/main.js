@@ -1,4 +1,7 @@
 const { invoke } = window.__TAURI__.core;
+const { moveWindow, Position } = window.__TAURI__.positioner;
+
+moveWindow(Position.TopRight);
 
 async function sendKey(key = "") {
   await invoke("trigger_key", { key });
@@ -232,13 +235,18 @@ class Macro {
 window.addEventListener("DOMContentLoaded", async () => {
   const soundStart = new Howl({
     src: ["./assets/sounds/start.mp3"],
-    volume: 0.3,
+    volume: 0.2,
   });
 
   const soundWait = new Howl({
     src: ["./assets/sounds/wait.mp3"],
-    volume: 0.3,
+    volume: 0.2,
     loop: true,
+  });
+
+  const soundStop = new Howl({
+    src: ["./assets/sounds/stop.mp3"],
+    volume: 0.2,
   });
 
   const contentRes = await fetch("/content.txt");
@@ -289,6 +297,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   btnStop.onclick = () => {
     macro.stop();
     txtCountDown.innerText = "Stopped!";
+    soundStop.play();
   };
 
   btnContinue.onclick = () => {

@@ -11,8 +11,9 @@
     "windows": [
       {
         "title": "macro",
-        "width": 800,
-        "height": 600
+        "width": 300,
+        "height": 300,
+        "alwaysOnTop": true
       }
     ],
     "security": {
