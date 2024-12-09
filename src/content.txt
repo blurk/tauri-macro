@@ -1,0 +1,129 @@
+  const footerLinks = [
+    {
+      title: "Site Map",
+      children: [
+        { name: "Home", href: "/" },
+        { name: "Events", href: "/event/list-events" },
+        { name: "Image Gallery", href: "" },
+      ],
+    },
+    {
+      title: "About Us",
+      children: [
+        { name: "Vision", href: "" },
+        { name: "Goals", href: "" },
+        { name: "Mission", href: "" },
+        { name: "About the Center", href: "" },
+      ],
+    },
+    {
+      title: "Help and Support",
+      children: [
+        { name: "Terms & Conditions", href: "/terms-conditions" },
+        { name: "Privacy Policy", href: "/privacy-policy" },
+        { name: "Contact Us", href: "" },
+        { name: "Help Center", href: "" },
+      ],
+    },
+  ];
+
+  const date = new Date();
+  const currentYear = date.getFullYear();
+
+  return (
+    <TheContainer
+      component={"footer"}
+      id="footer"
+      sx={{
+        pb: { xs: 18 / 8, md: 28 / 8 },
+        pt: { xs: 30 / 8, md: 40 / 8, lg: 60 / 8 },
+        backgroundColor: "#14385B",
+      }}
+    >
+      <Stack
+        direction={{ xs: "column", lg: "row" }}
+        useFlexGap
+        justifyContent={"space-between"}
+      >
+        <Stack
+          direction={"row"}
+          useFlexGap
+          gap={'12px'}
+          flexWrap={"wrap"}
+          sx={{
+            "& > img": {
+              objectFit: "contain",
+              objectPosition: "center",
+              borderRadius: 1,
+            },
+          }}
+        >
+          <img src={imgLogoFooter1} alt="" height={74} loading="lazy" />
+          <img src={imgLogoFooter2} alt="" height={74} loading="lazy" />
+          <img src={imgLogoFooter3} alt="" height={74} loading="lazy" />
+        </Stack>
+
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          useFlexGap
+          gap={{ xs: 69 / 16, md: 69 / 8 }}
+          mt={{ xs: 2, lg: 0 }}
+        >
+          {footerLinks.map((item) => {
+            return (
+              <List key={item.title} disablePadding>
+                <Typography
+                  fontFamily={"Montserrat"}
+                  fontSize={24 / 16 + "rem"}
+                  fontWeight={700}
+                  lineHeight={32 / 24}
+                  color={"#FFFFFF"}
+                  letterSpacing={"-0.005em"}
+                  sx={{ p: { xs: 1, lg: 2 }, pl: { xs: 0, lg: 2 } }}
+                >
+                  {item.title}
+                </Typography>
+                {item.children.map((link, index) => {
+                  return (
+                    <ListItem
+                      key={item.title + "-" + index}
+                      disableGutters
+                      disablePadding
+                      sx={{ p: { xs: 1, lg: 2 }, pl: { xs: 0, lg: 2 } }}
+                    >
+                      <MuiLink
+                        component={Link}
+                        underline="hover"
+                        to={link.href}
+                        fontFamily={"Montserrat"}
+                        fontSize={"1rem"}
+                        fontWeight={400}
+                        lineHeight={24 / 16}
+                        color={"#FFFFFF"}
+                      >
+                        {link.name}
+                      </MuiLink>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            );
+          })}
+        </Stack>
+      </Stack>
+      <Box height={2} bgcolor={alpha("#B3E5FC", 0.3)} mt={2} />
+      <Typography
+        component={"p"}
+        fontFamily={"Montserrat"}
+        fontSize={"1rem"}
+        fontWeight={400}
+        lineHeight={24 / 16}
+        textAlign={"start"}
+        color={"#FFFFFF"}
+        mt={7.5 / 8}
+      >
+        &copy; {currentYear} all rights reserved to the Ministry of Culture,
+        Sports, and Youth
+      </Typography>
+    </TheContainer>
+  );
