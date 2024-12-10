@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     loop: true,
   });
 
-  const contentRes = await fetch("/content.txt");
+  const contentRes = await fetch("/files/content.txt");
   const content = await contentRes.text();
 
   const macro = new Macro({
