@@ -1,49 +1,143 @@
-  beforeEach(() => {
-    jest.resetModules();
-    jest.doMock("react-native", () => ({ Platform: { OS: "ios" } }));
-    jest.spyOn(helpers, "getOS").mockImplementation(() => "ios");
-  });
+    let wrapper: ShallowWrapper;
+    let instance: EmailAccountSignUp;
 
-  test("User navigates to LandingPage", ({ given, when, then }) => {
-    let landingPageBlock: ShallowWrapper;
-    let instance: LandingPage;
-
-    given("I am a User loading LandingPage", () => {
-      landingPageBlock = shallow(<LandingPage {...screenProps} />);
-      render(<LandingPage {...screenProps} />, { wrapper: BrowserRouter });
+    given("Access EmailAccountSignUp", () => {
+      wrapper = shallow(<EmailAccountSignUp {...screenProps} />);
     });
 
-    when("I navigate to the LandingPage", () => {
-      instance = landingPageBlock.instance() as LandingPage;
+    when("EmailAccountSignUp is rendered", () => {
+      instance = wrapper.instance() as EmailAccountSignUp;
 
-      simulateResponse(
-        instance,
-        "apiGetHeroImagesCallAPI",
-        MOCK_HERO_IMAGE_RESPONSE
+      const unknowMessage = createTestMessage();
+
+      runEngine.sendMessage("Unit Test", unknowMessage);
+
+      const formik = wrapper.findWhere(
+        (node) => node.prop("data-test-id") === "email-sign-up-formik"
       );
 
-      simulateResponse(
-        instance,
-        "apiGetGalleryImagesCallAPI",
-        MOCK_GALLERY_IMAGE_RESPONSE
+      formik.renderProp("children")({
+        values: {
+          name: "",
+          account: "",
+          password: "",
+          confirmPassword: "",
+          agree: false,
+        },
+
+        touched: {
+          name: true,
+          account: true,
+          password: true,
+          confirmPassword: true,
+          agree: true,
+        },
+
+        errors: {
+          name: "",
+          account: "",
+          password: "",
+          confirmPassword: "",
+          agree: "Demo",
+        },
+
+        setFieldError: jest.fn(),
+      });
+
+      formik.simulate("submit", {
+        email: "demo@gmail.com",
+        password: "12345678",
+        name: "demo",
+      });
+
+      const errorSignUpMessage = createTestMessage({
+        errors: [
+          {
+            account: "error",
+          },
+        ],
+      });
+
+      instance.signUpApiId = errorSignUpMessage.messageId;
+
+      runEngine.sendMessage("Unit Test", errorSignUpMessage);
+
+      const signUpMessage = createTestMessage({
+        meta: {
+          token: "token",
+        },
+      });
+
+      instance.signUpApiId = signUpMessage.messageId;
+
+      runEngine.sendMessage("Unit Test", signUpMessage);
+
+      const signInBtn = formik
+        .shallow()
+        .findWhere((node) => node.prop("data-test-id") === "sign-in-btn");
+
+      signInBtn.simulate("click");
+
+      const continueBtn = formik
+        .shallow()
+        .findWhere(
+          (node) => node.prop("data-test-id") === "continue-with-mobile-btn"
+        );
+
+      continueBtn.simulate("click");
+    });
+
+    then("EmailAccountSignUp does not have error", () => {
+      expect(wrapper).toBeTruthy();
+    });
+
+    when("User input password at least one capital letter", () => {
+      const unknowMessage = createTestMessage();
+
+      runEngine.sendMessage("Unit Test", unknowMessage);
+
+      const formik = wrapper.findWhere(
+        (node) => node.prop("data-test-id") === "email-sign-up-formik"
       );
     });
 
-    then("LandingPage will load with out errors", () => {
-      const value = Boolean(landingPageBlock);
-      expect(value).toBe(true);
+    then("User input password at least one number", () => {
+      const unknowMessage = createTestMessage();
+
+      runEngine.sendMessage("Unit Test", unknowMessage);
+
+      const formik = wrapper.findWhere(
+        (node) => node.prop("data-test-id") === "email-sign-up-formik"
+      );
     });
 
-    then("LandingPage with updated UI will load with out errors", () => {
-      const value = Boolean(landingPageBlock);
-      expect(value).toBe(true);
+    then("User input password have 8 characters", () => {
+      const unknowMessage = createTestMessage();
+
+      runEngine.sendMessage("Unit Test", unknowMessage);
+
+      const formik = wrapper.findWhere(
+        (node) => node.prop("data-test-id") === "email-sign-up-formik"
+      );
     });
 
-    then(
-      "Landing page to include the username once Signup or login is completed",
-      () => {
-        const header = landingPageBlock.find("TheHeader");
-        expect(Boolean(header)).toBe(true);
-      }
-    );
-  });
+    then("User can go to Terms & Conditions or Privacy Policy", () => {
+      const formik = wrapper.findWhere(
+        (node) => node.prop("data-test-id") === "email-sign-up-formik"
+      );
+
+      const agreeCheckbox = formik
+        .dive()
+        .findWhere((node) => node.prop("data-test-id") === "agree-checkbox");
+
+      const checkboxLabel = shallow(agreeCheckbox.prop("checkboxLabel"));
+      const termsAndConditions = checkboxLabel.findWhere(
+        (node) => node.prop("data-test-id") === "terms-and-conditions"
+      );
+      termsAndConditions.simulate("click");
+
+      const privacyPolicy = checkboxLabel.findWhere(
+        (node) => node.prop("data-test-id") === "privacy-policy"
+      );
+      privacyPolicy.simulate("click");
+    });

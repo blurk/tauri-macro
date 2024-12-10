@@ -205,7 +205,7 @@ class Macro {
   async reset() {
     this.stop();
 
-    await deleteAll();
+    // await deleteAll();
 
     this.#pointer = 0;
   }
@@ -238,15 +238,25 @@ window.addEventListener("DOMContentLoaded", async () => {
     volume: 0.2,
   });
 
-  const soundWait = new Howl({
-    src: ["./assets/sounds/wait.mp3"],
+  const soundContinue = new Howl({
+    src: ["./assets/sounds/continue.mp3"],
     volume: 0.2,
-    loop: true,
   });
 
   const soundStop = new Howl({
     src: ["./assets/sounds/stop.mp3"],
     volume: 0.2,
+  });
+
+  const soundReset = new Howl({
+    src: ["./assets/sounds/reset.mp3"],
+    volume: 0.2,
+  });
+
+  const soundWait = new Howl({
+    src: ["./assets/sounds/wait.mp3"],
+    volume: 0.2,
+    loop: true,
   });
 
   const contentRes = await fetch("/content.txt");
@@ -264,91 +274,39 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btnContinue = document.getElementById("btnContinue");
   const btnReset = document.getElementById("btnReset");
 
-  let isWaiting = false;
-
   btnStart.onclick = () => {
-    let count = 10;
+    soundWait.play();
+    txtCountDown.innerText = "Will run after 10s!";
 
-    const intervalId = setInterval(() => {
-      if (count === 0) {
-        txtCountDown.innerText = "Started!";
-        macro.run();
-
-        if (isWaiting) {
-          isWaiting = false;
-          soundWait.stop();
-        }
-
-        soundStart.play();
-        clearInterval(intervalId);
-      } else {
-        count--;
-
-        if (!isWaiting) {
-          isWaiting = true;
-          soundWait.play();
-        }
-
-        txtCountDown.innerText = "Start after: " + count;
-      }
-    }, 1000);
+    setTimeout(() => {
+      soundWait.stop();
+      soundStart.play();
+      macro.run();
+      txtCountDown.innerText = "Started!";
+    }, 10 * 1000);
   };
 
   btnStop.onclick = () => {
+    soundStop.play();
     macro.stop();
     txtCountDown.innerText = "Stopped!";
-    soundStop.play();
   };
 
   btnContinue.onclick = () => {
-    let count = 5;
-
-    const intervalId = setInterval(() => {
-      if (count === 0) {
-        txtCountDown.innerText = "Continued!";
-
-        if (isWaiting) {
-          isWaiting = false;
-          soundWait.stop();
-        }
-
-        soundStart.play();
-        macro.continue();
-        clearInterval(intervalId);
-      } else {
-        txtCountDown.innerText = "Continue after: " + count;
-        count--;
-
-        if (!isWaiting) {
-          isWaiting = true;
-          soundWait.play();
-        }
-      }
-    }, 1000);
+    soundContinue.play();
+    macro.continue();
+    txtCountDown.innerText = "Continued!";
   };
 
   btnReset.onclick = () => {
-    let count = 5;
+    soundWait.play();
+    txtCountDown.innerText = "Will continue after 5s!";
 
-    const intervalId = setInterval(() => {
-      if (count === 0) {
-        if (isWaiting) {
-          isWaiting = false;
-          soundWait.stop();
-        }
-
-        txtCountDown.innerText = "Reset ok! Please start again!";
-        macro.reset();
-        clearInterval(intervalId);
-      } else {
-        if (!isWaiting) {
-          isWaiting = true;
-          soundWait.play();
-        }
-
-        count--;
-        txtCountDown.innerText = "Reset after: " + count;
-      }
-    }, 1000);
+    setTimeout(() => {
+      soundWait.stop();
+      soundReset.play();
+      macro.reset();
+      txtCountDown.innerText = "Reset done!";
+    }, 5 * 1000);
   };
 });
