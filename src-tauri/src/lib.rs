@@ -51,18 +51,6 @@ fn trigger_key(key: &str) {
     }
 }
 
-#[tauri::command]
-fn trigger_delete_all() {
-    println!("Select all and delete");
-
-    let mut enigo = Enigo::new(&Settings::default()).unwrap();
-
-    enigo.key(Key::Control, Press).unwrap();
-    enigo.key(Key::Unicode('a'), Click).unwrap();
-    enigo.key(Key::Backspace, Click).unwrap();
-    enigo.key(Key::Control, Release).unwrap();
-}
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -80,7 +68,7 @@ pub fn run() {
         })
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![trigger_key, trigger_delete_all])
+        .invoke_handler(tauri::generate_handler![trigger_key])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
