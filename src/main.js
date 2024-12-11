@@ -30,14 +30,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     loop: true,
   });
 
-  const contentRes = await fetch("/files/content.txt");
-  const content = await contentRes.text();
+  // const contentRes = await fetch("/files/content.txt");
+  // const content = await contentRes.text();
 
-  const macro = new Macro({
-    content: content,
-    wait: 21000,
-    delay: 987,
-  });
+  let macro;
 
   const txtCountDown = document.getElementById("txtCountDown");
   const btnStart = document.getElementById("btnStart");
@@ -46,6 +42,18 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btnReset = document.getElementById("btnReset");
 
   btnStart.onclick = () => {
+    const content = document.getElementById("content").value;
+    if (!content) {
+      alert("NO!");
+      return;
+    }
+
+    macro = new Macro({
+      content: content,
+      wait: 21000,
+      delay: 987,
+    });
+
     soundWait.play();
     txtCountDown.innerText = "Will run after 10s!";
 
@@ -79,5 +87,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   btnReset.onclick = () => {
     soundReset.play();
     macro.reset();
+    txtCountDown.innerText = "Reset done!";
   };
 });
