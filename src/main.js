@@ -33,6 +33,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   // const contentRes = await fetch("/files/content.txt");
   // const content = await contentRes.text();
 
+  /** @type {Macro} */
   let macro;
 
   const txtCountDown = document.getElementById("txtCountDown");
@@ -41,7 +42,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btnContinue = document.getElementById("btnContinue");
   const btnReset = document.getElementById("btnReset");
 
-  btnStart.onclick = () => {
+  btnStart.onclick = async () => {
     const content = document.getElementById("content").value;
     if (!content) {
       alert("NO!");
@@ -57,36 +58,36 @@ window.addEventListener("DOMContentLoaded", async () => {
     soundWait.play();
     txtCountDown.innerText = "Will run after 10s!";
 
-    setTimeout(() => {
+    setTimeout(async () => {
       soundWait.stop();
       soundStart.play();
-      macro.run();
+      await macro.run();
       txtCountDown.innerText = "Started!";
     }, 10 * 1000);
   };
 
-  btnStop.onclick = () => {
+  btnStop.onclick = async () => {
     soundStop.play();
     macro.stop();
     txtCountDown.innerText = "Stopped!";
   };
 
-  btnContinue.onclick = () => {
+  btnContinue.onclick = async () => {
     soundWait.play();
     txtCountDown.innerText = "Will continue after 5s!";
 
-    setTimeout(() => {
+    setTimeout(async () => {
       soundWait.stop();
 
       soundContinue.play();
-      macro.continue();
+      await macro.continue();
       txtCountDown.innerText = "Continued!";
     }, 5 * 1000);
   };
 
-  btnReset.onclick = () => {
+  btnReset.onclick = async () => {
     soundReset.play();
-    macro.reset();
+    await macro.reset();
     txtCountDown.innerText = "Reset done!";
   };
 });

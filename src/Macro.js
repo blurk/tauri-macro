@@ -47,9 +47,9 @@ class Macro {
     this.#stop = true;
   }
 
-  continue() {
+  async continue() {
     this.#stop = false;
-    this.run();
+    await this.run();
   }
 
   async reset() {
