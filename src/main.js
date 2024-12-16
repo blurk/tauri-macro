@@ -1,38 +1,39 @@
-import { Macro } from "./Macro.js";
+import { moveWindow, Position } from "@tauri-apps/plugin-positioner";
+import { Howl } from "howler";
 
-const { moveWindow, Position } = window.__TAURI__.positioner;
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+
+import Macro from "./Macro";
+
 moveWindow(Position.TopRight);
 
+const soundStart = new Howl({
+  src: ["./assets/sounds/start.mp3"],
+  volume: 0.2,
+});
+
+const soundContinue = new Howl({
+  src: ["./assets/sounds/continue.mp3"],
+  volume: 0.2,
+});
+
+const soundStop = new Howl({
+  src: ["./assets/sounds/stop.mp3"],
+  volume: 0.2,
+});
+
+const soundReset = new Howl({
+  src: ["./assets/sounds/reset.mp3"],
+  volume: 0.2,
+});
+
+const soundWait = new Howl({
+  src: ["./assets/sounds/wait.mp3"],
+  volume: 0.2,
+  loop: true,
+});
+
 window.addEventListener("DOMContentLoaded", async () => {
-  const soundStart = new Howl({
-    src: ["./assets/sounds/start.mp3"],
-    volume: 0.2,
-  });
-
-  const soundContinue = new Howl({
-    src: ["./assets/sounds/continue.mp3"],
-    volume: 0.2,
-  });
-
-  const soundStop = new Howl({
-    src: ["./assets/sounds/stop.mp3"],
-    volume: 0.2,
-  });
-
-  const soundReset = new Howl({
-    src: ["./assets/sounds/reset.mp3"],
-    volume: 0.2,
-  });
-
-  const soundWait = new Howl({
-    src: ["./assets/sounds/wait.mp3"],
-    volume: 0.2,
-    loop: true,
-  });
-
-  // const contentRes = await fetch("/files/content.txt");
-  // const content = await contentRes.text();
-
   /** @type {Macro} */
   let macro;
 
@@ -42,8 +43,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btnContinue = document.getElementById("btnContinue");
   const btnReset = document.getElementById("btnReset");
 
+  const editor = monaco.editor.create(document.getElementById("editor"), {
+    theme: "vs-dark",
+    // cursorStyle: "block",
+  });
+
   btnStart.onclick = async () => {
-    const content = document.getElementById("content").value;
+    const content = editor.getValue();
     if (!content) {
       alert("NO!");
       return;

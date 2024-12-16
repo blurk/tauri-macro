@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+
+    <style>
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .header > * {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="header">
+        <div>
+          <h1>Say no to corpo</h1>
+          <img src="johnny.jpg" alt="johnny silverhand" width="200" />
+        </div>
+
+        <div>
+          <p id="txtCountDown">Noti will be here</p>
+          <button type="button" id="btnStart">Start</button>
+          <button type="button" id="btnStop">Stop</button>
+          <button type="button" id="btnContinue">Continue</button>
+          <button type="button" id="btnReset">Reset</button>
+        </div>
+      </div>
+
+      <div id="editor" style="width: 100%; min-height: 50vh"></div>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

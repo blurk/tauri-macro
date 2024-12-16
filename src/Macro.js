@@ -1,4 +1,4 @@
-const { invoke } = window.__TAURI__.core;
+import { invoke } from "@tauri-apps/api/core";
 
 async function sendKey(key = "") {
   await invoke("trigger_key", { key });
@@ -80,4 +80,4 @@ class Macro {
   }
 }
 
-export { Macro };
+export default Macro;
