@@ -1,34 +1,34 @@
 import { moveWindow, Position } from "@tauri-apps/plugin-positioner";
 import { Howl } from "howler";
 
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.main";
 
 import Macro from "./Macro";
 
 moveWindow(Position.TopRight);
 
 const soundStart = new Howl({
-  src: ["./assets/sounds/start.mp3"],
+  src: ["/sounds/start.mp3"],
   volume: 0.2,
 });
 
 const soundContinue = new Howl({
-  src: ["./assets/sounds/continue.mp3"],
+  src: ["/sounds/continue.mp3"],
   volume: 0.2,
 });
 
 const soundStop = new Howl({
-  src: ["./assets/sounds/stop.mp3"],
+  src: ["/sounds/stop.mp3"],
   volume: 0.2,
 });
 
 const soundReset = new Howl({
-  src: ["./assets/sounds/reset.mp3"],
+  src: ["/sounds/reset.mp3"],
   volume: 0.2,
 });
 
 const soundWait = new Howl({
-  src: ["./assets/sounds/wait.mp3"],
+  src: ["/sounds/wait.mp3"],
   volume: 0.2,
   loop: true,
 });
@@ -45,11 +45,16 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const editor = monaco.editor.create(document.getElementById("editor"), {
     theme: "vs-dark",
-    // cursorStyle: "block",
+    automaticLayout: true,
+    minimap: { enabled: false, renderCharacters: false },
+    renderIndentGuides: false,
+    renderLineHighlightOnlyWhenFocus: true,
+    language: "typescript",
   });
 
   btnStart.onclick = async () => {
     const content = editor.getValue();
+
     if (!content) {
       alert("NO!");
       return;
@@ -73,6 +78,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   };
 
   btnStop.onclick = async () => {
+    soundWait.stop();
     soundStop.play();
     macro.stop();
     txtCountDown.innerText = "Stopped!";
