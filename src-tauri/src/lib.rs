@@ -1,30 +1,12 @@
-use enigo::{
-    Axis::Vertical,
-    Coordinate::Rel,
-    Direction::{Click, Press, Release},
-    Enigo, Key, Keyboard, Mouse, Settings,
-};
+use enigo::{Axis::Vertical, Coordinate::Rel, Enigo, Key, Keyboard, Mouse, Settings};
 
 #[tauri::command]
 fn trigger_key(key: &str) {
     let value = key.chars().next().unwrap();
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
-    let check_is_uppercase = value.is_ascii_uppercase();
-    let unicode = Key::Unicode(key.to_lowercase().chars().next().unwrap());
-    let special_chars = "{}|:\"<>?!@#$%^&*()_+";
-    let check_is_special_char = special_chars.contains(value);
+    println!("Key: {key}, Value: {value}");
 
-    println!("Key: {key}, Value: {value}, check_is_uppercase: {check_is_uppercase}, check_is_special_char: {check_is_special_char}");
-
-    if check_is_uppercase {
-        enigo.key(Key::Shift, Press).unwrap();
-        enigo.key(unicode, Click).unwrap();
-        enigo.key(Key::Shift, Release).unwrap();
-    } else if check_is_special_char {
-        enigo.text(key).unwrap();
-    } else {
-        enigo.key(unicode, Click).unwrap();
-    }
+    enigo.text(key).unwrap();
 }
 
 #[tauri::command]
