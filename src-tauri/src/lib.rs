@@ -21,33 +21,7 @@ fn trigger_key(key: &str) {
         enigo.key(unicode, Click).unwrap();
         enigo.key(Key::Shift, Release).unwrap();
     } else if check_is_special_char {
-        let _key = match value {
-            '!' => Key::Unicode('1'),
-            '@' => Key::Unicode('2'),
-            '#' => Key::Unicode('3'),
-            '$' => Key::Unicode('4'),
-            '%' => Key::Unicode('5'),
-            '^' => Key::Unicode('6'),
-            '&' => Key::Unicode('7'),
-            '*' => Key::Unicode('8'),
-            '(' => Key::Unicode('9'),
-            ')' => Key::Unicode('0'),
-            '_' => Key::Other(189),
-            '+' => Key::Other(187),
-            '{' => Key::Other(219),
-            '}' => Key::Other(221),
-            '|' => Key::Other(226),
-            ':' => Key::Other(186),
-            '"' => Key::Other(222),
-            '<' => Key::Other(188),
-            '>' => Key::Other(190),
-            '?' => Key::Other(220),
-            _ => Key::Space,
-        };
-
-        enigo.key(Key::Shift, Press).unwrap();
-        enigo.key(_key, Click).unwrap();
-        enigo.key(Key::Shift, Release).unwrap();
+        enigo.text(key).unwrap();
     } else {
         enigo.key(unicode, Click).unwrap();
     }
