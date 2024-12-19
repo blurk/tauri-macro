@@ -38,6 +38,9 @@ class Macro {
   }
 
   #type(key = "") {
+    if (key === "\r") {
+      return;
+    }
     sendKey(key);
   }
 
