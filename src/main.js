@@ -50,6 +50,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     renderIndentGuides: false,
     renderLineHighlightOnlyWhenFocus: true,
     language: "typescript",
+    value: value,
   });
 
   btnStart.onclick = async () => {
@@ -103,3 +104,128 @@ window.addEventListener("DOMContentLoaded", async () => {
     txtCountDown.innerText = "Reset done!";
   };
 });
+
+const value = `import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { createStore } from 'redux';
+import { Provider, connect } from 'react-redux';
+import axios from 'axios';
+
+// Redux Action Types
+const INCREMENT = 'INCREMENT';
+const DECREMENT = 'DECREMENT';
+
+// Redux Actions
+const increment = () => ({ type: INCREMENT });
+const decrement = () => ({ type: DECREMENT });
+
+// Redux Reducer
+interface State {
+  count: number;
+}
+
+const initialState: State = { count: 0 };
+
+const rootReducer = (state = initialState, action: { type: string }) => {
+  switch (action.type) {
+    case INCREMENT:
+      return { ...state, count: state.count + 1 };
+    case DECREMENT:
+      return { ...state, count: state.count - 1 };
+    default:
+      return state;
+  }
+};
+
+// Create Redux Store
+const store = createStore(rootReducer);
+
+// Counter Component
+interface CounterProps {
+  count: number;
+  increment: () => void;
+  decrement: () => void;
+}
+
+const Counter: React.FC<CounterProps> = ({ count, increment, decrement }) => (
+  <div>
+    <h1>Counter: {count}</h1>
+    <button onClick={increment}>Increment</button>
+    <button onClick={decrement}>Decrement</button>
+  </div>
+);
+
+const mapStateToProps = (state: State) => ({
+  count: state.count,
+});
+
+const mapDispatchToProps = {
+  increment,
+  decrement,
+};
+
+const ConnectedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
+
+// Quote Component
+interface QuoteState {
+  quote: string;
+  author: string;
+}
+
+class Quote extends Component<{}, QuoteState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      quote: '',
+      author: '',
+    };
+  }
+
+  fetchQuote = () => {
+    axios.get('https://api.quotable.io/random')
+      .then(response => {
+        const { content, author } = response.data;
+        this.setState({ quote: content, author });
+      })
+      .catch(error => {
+        console.error('Error fetching quote:', error);
+      });
+  };
+
+  componentDidMount() {
+    this.fetchQuote();
+  }
+
+  render() {
+    return (
+      <div>
+        <p>"{this.state.quote}"</p>
+        <p>- {this.state.author}</p>
+        <button onClick={this.fetchQuote}>New Quote</button>
+      </div>
+    );
+  }
+}
+
+// Main App Component
+const App: React.FC = () => (
+  <Provider store={store}>
+    <Router>
+      <div>
+        <h1>My App</h1>
+        <nav>
+          <Link to="/">Counter</Link>
+          <Link to="/quote">Quote</Link>
+        </nav>
+        <Switch>
+          <Route path="/" exact component={ConnectedCounter} />
+          <Route path="/quote" component={Quote} />
+        </Switch>
+      </div>
+    </Router>
+  </Provider>
+);
+
+// Render the App
+ReactDOM.render(<App />, document.getElementById('root'));`;

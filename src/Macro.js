@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 
-async function sendKey(key = "") {
+async function sendKey(key) {
   await invoke("trigger_key", { key });
 }
 
@@ -38,15 +38,6 @@ class Macro {
   }
 
   #type(key = "") {
-    if (key.match(/\r/)) {
-      return;
-    }
-
-    if (key.match(/\n/)) {
-      sendKey(key);
-      return;
-    }
-
     sendKey(key);
   }
 
@@ -130,11 +121,11 @@ class Macro {
       this.#nextChar();
       await this.#wait(this.delay * Math.random() + 321);
     } else if (seed < 0.9) {
-      // await this.callMoveMouse();
+      await this.callMoveMouse();
     } else if (seed < 0.95) {
-      // await scroll();
+      await scroll();
     } else {
-      // await this.#wait(this.wait);
+      await this.#wait(this.wait);
     }
 
     this.run();

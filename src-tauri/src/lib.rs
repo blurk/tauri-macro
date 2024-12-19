@@ -1,10 +1,9 @@
-use enigo::{Axis::Vertical, Coordinate::Rel, Enigo, Key, Keyboard, Mouse, Settings};
+use enigo::{Axis::Vertical, Coordinate::Rel, Enigo, Keyboard, Mouse, Settings};
 
 #[tauri::command]
 fn trigger_key(key: &str) {
-    let value = key.chars().next().unwrap();
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
-    println!("Key: {key}, Value: {value}");
+    println!("Key: {key}");
 
     enigo.text(key).unwrap();
 }
