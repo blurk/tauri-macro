@@ -4,6 +4,10 @@ async function sendKey(key) {
   await invoke("trigger_key", { key });
 }
 
+async function sendEnter() {
+  await invoke("trigger_enter");
+}
+
 async function scroll() {
   await invoke("scroll");
 }
@@ -37,8 +41,12 @@ class Macro {
     });
   }
 
-  #type(key = "") {
-    sendKey(key);
+  async #type(key = "") {
+    if (key.match(/\n/)) {
+      await sendEnter();
+    } else {
+      await sendKey(key);
+    }
   }
 
   #nextChar() {
@@ -117,7 +125,7 @@ class Macro {
 
     const seed = Math.random();
     if (seed < 0.85) {
-      this.#type(k);
+      await this.#type(k);
       this.#nextChar();
       await this.#wait(this.delay * Math.random() + 321);
     } else if (seed < 0.9) {

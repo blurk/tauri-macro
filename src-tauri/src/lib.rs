@@ -1,4 +1,6 @@
-use enigo::{Axis::Vertical, Coordinate::Rel, Enigo, Keyboard, Mouse, Settings};
+use enigo::{
+    Axis::Vertical, Coordinate::Rel, Direction::Click, Enigo, Key, Keyboard, Mouse, Settings,
+};
 
 #[tauri::command]
 fn trigger_key(key: &str) {
@@ -6,6 +8,14 @@ fn trigger_key(key: &str) {
     println!("Key: {key}");
 
     enigo.text(key).unwrap();
+}
+
+#[tauri::command]
+fn trigger_enter() {
+    let mut enigo = Enigo::new(&Settings::default()).unwrap();
+    println!("Enter");
+
+    enigo.key(Key::Return, Click).unwrap();
 }
 
 #[tauri::command]
@@ -37,7 +47,12 @@ pub fn run() {
         })
         .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![trigger_key, scroll, move_mouse])
+        .invoke_handler(tauri::generate_handler![
+            trigger_key,
+            scroll,
+            move_mouse,
+            trigger_enter
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
