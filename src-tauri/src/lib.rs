@@ -1,20 +1,42 @@
 use enigo::{
-    Axis::Vertical, Coordinate::Rel, Direction::Click, Enigo, Key, Keyboard, Mouse, Settings,
+    Axis::Vertical, Coordinate::Rel, Direction::Click, Direction::Press, Direction::Release, Enigo,
+    Key, Keyboard, Mouse, Settings,
 };
 
 #[tauri::command]
 fn trigger_key(key: &str) {
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     println!("Key: {key}");
-
-    enigo.text(key).unwrap();
+    #[cfg(target_os = "macos")]
+    {
+        let char = key.chars().next().unwrap();
+        let check_is_uppercase = char.is_ascii_uppercase();
+        let unicode = Key::Unicode(key.to_lowercase().chars().next().unwrap());
+        let special_chars = "{}|:\"<>?!@#$%^&*()_+";
+        let check_is_special_char = special_chars.contains(char);
+        if char == '/' {
+            enigo.key(Key::Unicode('?'), Click).unwrap();
+            return;
+        }
+        if check_is_uppercase || check_is_special_char {
+            enigo.key(Key::Shift, Press).unwrap();
+            enigo.key(unicode, Click).unwrap();
+            enigo.key(Key::Shift, Release).unwrap();
+        } else {
+            enigo.key(unicode, Click).unwrap();
+        }
+    }
+    #[cfg(target_os = "windows")]
+    {
+        enigo.text(key).unwrap();
+    }
 }
-
 #[tauri::command]
 fn trigger_enter() {
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     println!("Enter");
-
+    #[cfg(target_os = "macos")]
+    thread::sleep(Duration::from_secs(2));
     enigo.key(Key::Return, Click).unwrap();
 }
 
