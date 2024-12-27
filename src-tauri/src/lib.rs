@@ -36,7 +36,6 @@ fn trigger_enter() {
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     println!("Enter");
     #[cfg(target_os = "macos")]
-    thread::sleep(Duration::from_secs(2));
     enigo.key(Key::Return, Click).unwrap();
 }
 
