@@ -43,6 +43,36 @@ window.addEventListener("DOMContentLoaded", async () => {
   const btnContinue = document.getElementById("btnContinue");
   const btnReset = document.getElementById("btnReset");
 
+  /** @type {HTMLInputElement} */
+  const inputDelay = document.getElementById("inputDelay");
+  /** @type {HTMLInputElement} */
+  const inputWait = document.getElementById("inputWait");
+  const btnInputDelay = document.getElementById("btnInputDelay");
+  const btnInputWait = document.getElementById("btnInputWait");
+
+  let timeConfig = {
+    delay: inputDelay.valueAsNumber,
+    wait: inputWait.valueAsNumber,
+  };
+
+  btnInputDelay.onclick = () => {
+    timeConfig.delay = Number.isNaN(inputDelay.valueAsNumber)
+      ? 987
+      : inputDelay.valueAsNumber;
+
+    macro.delay = timeConfig.delay;
+    txtCountDown.innerText = "Typing delay updated!";
+  };
+
+  btnInputWait.onclick = () => {
+    timeConfig.wait = Number.isNaN(inputWait.valueAsNumber)
+      ? 21000
+      : inputWait.valueAsNumber;
+
+    macro.wait = timeConfig.wait;
+    txtCountDown.innerText = "Waiting time updated!";
+  };
+
   const editor = monaco.editor.create(document.getElementById("editor"), {
     theme: "vs-dark",
     automaticLayout: true,
@@ -63,8 +93,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     macro = new Macro({
       content: content,
-      wait: 21000,
-      delay: 987,
+      ...timeConfig,
     });
 
     soundWait.play();
@@ -105,127 +134,34 @@ window.addEventListener("DOMContentLoaded", async () => {
   };
 });
 
-const value = `import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import { createStore } from 'redux';
-import { Provider, connect } from 'react-redux';
-import axios from 'axios';
+const value = `import React from 'react';
 
-// Redux Action Types
-const INCREMENT = 'INCREMENT';
-const DECREMENT = 'DECREMENT';
-
-// Redux Actions
-const increment = () => ({ type: INCREMENT });
-const decrement = () => ({ type: DECREMENT });
-
-// Redux Reducer
-interface State {
-  count: number;
-}
-
-const initialState: State = { count: 0 };
-
-const rootReducer = (state = initialState, action: { type: string }) => {
-  switch (action.type) {
-    case INCREMENT:
-      return { ...state, count: state.count + 1 };
-    case DECREMENT:
-      return { ...state, count: state.count - 1 };
-    default:
-      return state;
-  }
-};
-
-// Create Redux Store
-const store = createStore(rootReducer);
-
-// Counter Component
-interface CounterProps {
-  count: number;
-  increment: () => void;
-  decrement: () => void;
-}
-
-const Counter: React.FC<CounterProps> = ({ count, increment, decrement }) => (
-  <div>
-    <h1>Counter: {count}</h1>
-    <button onClick={increment}>Increment</button>
-    <button onClick={decrement}>Decrement</button>
-  </div>
-);
-
-const mapStateToProps = (state: State) => ({
-  count: state.count,
-});
-
-const mapDispatchToProps = {
-  increment,
-  decrement,
-};
-
-const ConnectedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);
-
-// Quote Component
-interface QuoteState {
-  quote: string;
-  author: string;
-}
-
-class Quote extends Component<{}, QuoteState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      quote: '',
-      author: '',
-    };
-  }
-
-  fetchQuote = () => {
-    axios.get('https://api.quotable.io/random')
-      .then(response => {
-        const { content, author } = response.data;
-        this.setState({ quote: content, author });
-      })
-      .catch(error => {
-        console.error('Error fetching quote:', error);
-      });
+function StyledComponent() {
+  const styles = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      backgroundColor: '#f0f0f0',
+    },
+    box: {
+      padding: '20px',
+      backgroundColor: '#4caf50',
+      color: '#fff',
+      borderRadius: '5px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    },
   };
 
-  componentDidMount() {
-    this.fetchQuote();
-  }
-
-  render() {
-    return (
-      <div>
-        <p>"{this.state.quote}"</p>
-        <p>- {this.state.author}</p>
-        <button onClick={this.fetchQuote}>New Quote</button>
+  return (
+    <div style={styles.container}>
+      <div style={styles.box}>
+        Hello, this is a styled component!
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-// Main App Component
-const App: React.FC = () => (
-  <Provider store={store}>
-    <Router>
-      <div>
-        <h1>My App</h1>
-        <nav>
-          <Link to="/">Counter</Link>
-          <Link to="/quote">Quote</Link>
-        </nav>
-        <Switch>
-          <Route path="/" exact component={ConnectedCounter} />
-          <Route path="/quote" component={Quote} />
-        </Switch>
-      </div>
-    </Router>
-  </Provider>
-);
-
-// Render the App
-ReactDOM.render(<App />, document.getElementById('root'));`;
+export default StyledComponent;
+`;

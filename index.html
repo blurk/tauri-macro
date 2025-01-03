@@ -23,16 +23,40 @@
         <div>
           <h1>Say no to corpo</h1>
           <img src="johnny.jpg" alt="johnny silverhand" width="200" />
+
+          <div>
+            <label for="inputDelay">Typing delay (ms)</label>
+            <br />
+            <input type="number" id="inputDelay" value="978" />
+            <button id="btnInputDelay">Update</button>
+          </div>
+          <div>
+            <label for="inputWait">Waiting time (ms)</label>
+            <br />
+            <input type="number" id="inputWait" value="21000" />
+            <button id="btnInputWait">Update</button>
+          </div>
         </div>
 
         <div>
-          <h3>ALWAYS FOCUS ON EDITOR AFTER CLICKING ON BUTTON</h3>
+          <h3>Few notes:</h3>
+          <ul>
+            <li>
+              <strong>ALWAYS FOCUS ON EDITOR AFTER CLICKING ON BUTTON</strong>
+            </li>
+            <li>
+              <strong
+                >For VS Code: Use these configs when using the macro</strong
+              >
+              <code>
+                "editor.autoIndent": "none", "editor.acceptSuggestionOnEnter":
+                "off", "typescript.autoClosingTags": false,
+              </code>
+            </li>
+            <li>Always use real file and real code from project</li>
+            <li>Tool has 5% of moving mouse, 5% of trigger waiting time</li>
+          </ul>
 
-          <h3>For VS Code: Use these configs when using the macro</h3>
-          <code>
-            "editor.autoIndent": "none", "editor.acceptSuggestionOnEnter":
-            "off", "typescript.autoClosingTags": false,
-          </code>
           <h2 id="txtCountDown">Noti will be here</h2>
           <button type="button" id="btnStart">Start</button>
           <button type="button" id="btnStop">Stop</button>
@@ -41,6 +65,7 @@
         </div>
       </div>
 
+      <br />
       <div id="editor" style="width: 100%; min-height: 50vh"></div>
     </main>
 
