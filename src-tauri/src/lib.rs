@@ -1,6 +1,10 @@
+use std::{thread, time};
+
 use enigo::{
-    Axis::Vertical, Coordinate::Rel, Direction::Click, Direction::Press, Direction::Release, Enigo,
-    Key, Keyboard, Mouse, Settings,
+    Axis::Vertical,
+    Coordinate::Rel,
+    Direction::{Click, Press, Release},
+    Enigo, Key, Keyboard, Mouse, Settings,
 };
 
 #[tauri::command]
@@ -17,6 +21,9 @@ fn trigger_key(key: &str) {
         if char == '/' {
             enigo.key(Key::Unicode('?'), Click).unwrap();
             return;
+        } else if char == '.' {
+            enigo.key(Key::Unicode('>'), Click).unwrap();
+            return;
         }
         if check_is_uppercase || check_is_special_char {
             enigo.key(Key::Shift, Press).unwrap();
@@ -29,6 +36,7 @@ fn trigger_key(key: &str) {
     #[cfg(target_os = "windows")]
     {
         enigo.text(key).unwrap();
+        thread::sleep(time::Duration::from_millis(100));
     }
 }
 #[tauri::command]
@@ -72,6 +80,14 @@ pub fn run() {
             scroll,
             move_mouse,
             trigger_enter
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+        ])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
