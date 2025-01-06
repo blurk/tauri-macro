@@ -22,6 +22,7 @@ fn trigger_key(key: &str) {
             enigo.key(Key::Unicode('?'), Click).unwrap();
             return;
         } else if char == '.' {
+            println!("Handling character: '{:?}'", char);
             enigo.key(Key::Unicode('>'), Click).unwrap();
             return;
         }
@@ -80,14 +81,6 @@ pub fn run() {
             scroll,
             move_mouse,
             trigger_enter
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
-}
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
-}
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
